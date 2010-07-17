@@ -41,6 +41,21 @@ def rpx_connect config
   end
 end
 
+## ACTUAL runnable
+
+gem 'warden'
+gem 'devise', :version => '1.0.7'
+
+rake 'gems:install'
+
+config = {}
+
+run('ruby script/generate devise_install')
+
+make_user(config) if yes?("Do you want a basic user model?")
+rpx_connect(config) if yes?("Do you want to use RPX with Devise?")
+
+
 readme = <<-READ
 
 == Devise#{" and RPX" if config[:rpx_connect]} have been added to the app using Tim Ruffles's template, available at y
@@ -57,22 +72,6 @@ http://github.com/slainer68/devise_rpx_connectrable
 Thanks to them for making it so easy to get an app with great auth up in minutes! :)
 
 READ
-
-
-
-## ACTUAL runnable
-
-gem 'warden'
-gem 'devise', :version => '1.0.7'
-
-rake 'gems:install'
-
-config = {}
-
-run('ruby script/generate devise_install')
-
-make_user(config) if yes?("Do you want a basic user model?")
-rpx_connect(config) if yes?("Do you want to use RPX with Devise?")
 
 file_inject 'README', "This directory is in the load path.\n", readme
 
