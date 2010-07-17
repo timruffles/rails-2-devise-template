@@ -1,9 +1,4 @@
-gem 'warden'
-gem 'devise', :version => '1.0.7'
-
-config = {}
-
-run('ruby script/generate devise_install')
+### STEPS and setup come first, all the actual runnable is below
 
 def file_inject file, what, with, after = true
   gsub_file file, Regexp.new("(#{Regexp.quote(what)})"), (after ? "\\1#{with}" : "#{with}\\1")
@@ -19,6 +14,8 @@ def rpx_connect config
   # config.gem 'rpx_now'
   gem 'rpx_now'
   gem 'devise_rpx_connectable'
+  
+  rake 'gems:install'  
   
   # add app name
   puts "What is the name of your RPX app, the name, NOT the API key (you can change this in config/initializers/devise.rb @ config.rpx_application_name)"
@@ -44,12 +41,10 @@ def rpx_connect config
   end
 end
 
-make_user(config) if yes?("Do you want a basic user model?")
-rpx_connect(config) if yes?("Do you want to use RPX with Devise?")
-
 readme = <<-READ
 
-== Devise#{" and RPX" if config[:rpx_connect]} have been added to the app using Tim Ruffles's template, available at http://github.com/timruffles/rails-2-devise-template/raw/master/devise.rb
+== Devise#{" and RPX" if config[:rpx_connect]} have been added to the app using Tim Ruffles's template, available at y
+
 
 This template is just an implementation of the readmes provided by the fantastic Devise team at
 
@@ -57,11 +52,27 @@ http://github.com/plataformatec/devise
 
 and the team at devise_rpx_connectable
 
-http://github.com/slainer68/devise_rpx_connectable
+http://github.com/slainer68/devise_rpx_connectrable
 
 Thanks to them for making it so easy to get an app with great auth up in minutes! :)
 
 READ
+
+
+
+## ACTUAL runnable
+
+gem 'warden'
+gem 'devise', :version => '1.0.7'
+
+rake 'gems:install'
+
+config = {}
+
+run('ruby script/generate devise_install')
+
+make_user(config) if yes?("Do you want a basic user model?")
+rpx_connect(config) if yes?("Do you want to use RPX with Devise?")
 
 file_inject 'README', "This directory is in the load path.\n", readme
 
