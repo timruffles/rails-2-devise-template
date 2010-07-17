@@ -1,5 +1,4 @@
 ### STEPS and setup come first, all the actual runnable is below
-
 def file_inject file, what, with, after = true
   gsub_file file, Regexp.new("(#{Regexp.quote(what)})"), (after ? "\\1#{with}" : "#{with}\\1")
 end
@@ -19,12 +18,12 @@ def rpx_connect config
   
   # add app name
   puts "What is the name of your RPX app, the name, NOT the API key (you can change this in config/initializers/devise.rb @ config.rpx_application_name)"
-  rpx_app_name = gets.chomp
+  rpx_app_name = STDIN.gets.chomp
   file_inject 'config/initializers/devise.rb', "Devise.setup do |config|\n", "config.rpx_application_name = '#{rpx_app_name}'"
   
   # add api key
   puts "What is your RPX app API Key (you can change this in config/environment.rb in the config._adter_initialize block)"
-  rpx_api_key = gets.chomp
+  rpx_api_key = STDIN.gets.chomp
   
   rpx_api_key_include = <<-API
     config.after_initialize do # so rake gems:install works
